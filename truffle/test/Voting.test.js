@@ -63,6 +63,8 @@ contract('Voting', (accounts) => {
         await votingInstance.endVotingSession({ from: accounts[0] });
         await votingInstance.tallyVotes({ from: accounts[0] });
 
+        assert.equal(await votingInstance.getGlobalVoteCount(), 3);
+
         const gagnantId = await votingInstance.getWinner();
         assert.equal(gagnantId, 0); // Proposition A a reçu plus de votes
     });

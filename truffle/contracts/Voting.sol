@@ -84,6 +84,26 @@ contract Voting is Ownable {
         emit WorkflowStatusChange(WorkflowStatus.VotingSessionStarted, WorkflowStatus.VotingSessionEnded);
     }
 
+    // Permet de récupérer le nombre de propositions
+    function getProposalsCount() external view returns (uint) {
+        return proposals.length;
+    }
+
+    // Permet de récupérer le nombre total de votes
+    function getGlobalVoteCount() external view returns (uint) {
+        uint globalVoteCount = 0;
+        for (uint i = 0; i < proposals.length; i++) {
+            globalVoteCount += proposals[i].voteCount;
+        }
+        return globalVoteCount;
+    }
+
+    // Permet de récupérer la description d'une proposition (en fonction de son ID)
+    function getProposal(uint _proposalId) external view returns (string memory) {
+        require(_proposalId < proposals.length, "ID de la proposition invalide");
+        return proposals[_proposalId].description;
+    }
+
     function vote(uint _proposalId) external onlyRegisteredVoter inState(WorkflowStatus.VotingSessionStarted) {
         require(_proposalId < proposals.length, "ID de la proposition invalide");
         require(!voters[msg.sender].hasVoted, "Le votant a deja vote");
